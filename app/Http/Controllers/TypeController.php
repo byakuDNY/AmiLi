@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TypeController extends Controller
@@ -14,7 +15,7 @@ class TypeController extends Controller
     public function index()
     {
         return Inertia::render('Types/index', [
-            'types' => Type::orderBy('name')->get(),
+            'types' => Type::where('user_id', Auth::id())->orderBy('name')->get(),
         ]);
     }
 
@@ -40,8 +41,9 @@ class TypeController extends Controller
             'types.*.unique' => 'Type ":input" already exists'
         ]);
 
+
         collect($validated['types'])->each(function ($typeName) {
-            Type::create(['name' => trim($typeName)]);
+            Type::create(['name' => trim($typeName), 'user_id' => Auth::id()]);
         });
 
         return redirect()->back();

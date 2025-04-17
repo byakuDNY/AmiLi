@@ -6,6 +6,7 @@ use App\Models\Listing;
 use App\Models\Tag;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -17,7 +18,7 @@ class ListingController extends Controller
      */
     public function index(Request $request)
     {
-        $listings = Listing::with(['tags', 'type']);
+        $listings = Listing::with(['tags', 'type'])->where('user_id', Auth::id());
 
         if ($request->has('search')) {
             $search = $request->get('search');
@@ -60,6 +61,8 @@ class ListingController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id'
         ]);
+
+        $validated['user_id'] = Auth::id();
 
         $tags = $validated['tags'] ?? [];
 

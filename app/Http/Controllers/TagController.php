@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TagController extends Controller
@@ -14,7 +15,7 @@ class TagController extends Controller
     public function index()
     {
         return Inertia::render('Tags/index', [
-            'tags' => Tag::orderBy('name')->get(),
+            'tags' => Tag::where('user_id', Auth::id())->orderBy('name')->get(),
         ]);
     }
 
@@ -41,7 +42,7 @@ class TagController extends Controller
         ]);
 
         collect($validated['tags'])->each(function ($tagName) {
-            Tag::create(['name' => trim($tagName)]);
+            Tag::create(['name' => trim($tagName), 'user_id' => Auth::id()]);
         });
 
         return redirect()->back();

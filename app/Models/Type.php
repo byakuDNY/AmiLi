@@ -15,6 +15,11 @@ class Type extends Model
         'updated_at',
     ];
 
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
+
     public function listings()
     {
         return $this->hasMany(Listing::class);
