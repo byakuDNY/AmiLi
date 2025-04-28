@@ -18,20 +18,21 @@ class ListingController extends Controller
      */
     public function index(Request $request)
     {
-        $listings = Listing::with(['tags', 'type'])->where('user_id', Auth::id());
-
-        if ($request->has('search')) {
-            $search = $request->get('search');
-            $listings->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                ->orWhere('author', 'like', "%{$search}%");
-            });
-        }
+        // if ($request->has('search')) {
+        //     $search = $request->get('search');
+        //     $listings->where(function($q) use ($search) {
+        //         $q->where('name', 'like', "%{$search}%")
+        //         ->orWhere('author', 'like', "%{$search}%");
+        //     });
+        // }
 
 
         return Inertia::render('Listings/index', [
-            'listings' => $listings->orderBy('created_at', 'desc')->get(),
-            'filters' => $request->only(['search']),
+            'listings' => Listing::with(['tags', 'type'])->where('user_id', Auth::id())
+            // ->orderBy('updated_at', 'desc')
+            ->latest()
+            ->get()
+            // 'filters' => $request->only(['search']),
         ]);
     }
 
@@ -87,6 +88,7 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
+        // $this->authorize('update', $listing);
         return Inertia::render('Listings/edit', [
             'listing' => $listing->load(['tags', 'type']),
             'availableTags' => Tag::orderBy('name')->get(),
@@ -187,6 +189,7 @@ class ListingController extends Controller
                     $listing = Listing::create([
                         ...$validated,
                         'type_id' => $type->id,
+                        "user_id" => Auth::id()
                     ]);
     
                     // Attach existing tags

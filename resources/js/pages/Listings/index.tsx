@@ -1,22 +1,20 @@
 import DataTable from '@/components/table';
 import Columns from '@/components/table/columns';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type Listing } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { FormEvent, useState } from 'react';
 
 interface ListingsPageProps {
     listings: Listing[];
-    filters: {
-        search?: string;
-    };
+    // filters: {
+    //     search?: string;
+    // };
 }
 
-const ListingsPage = ({ listings, filters }: ListingsPageProps) => {
-    const [search, setSearch] = useState(filters.search || '');
+const ListingsPage = ({ listings }: ListingsPageProps) => {
+    // const [search, setSearch] = useState(filters.search || '');
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -25,10 +23,10 @@ const ListingsPage = ({ listings, filters }: ListingsPageProps) => {
         },
     ];
 
-    const handleSearch = (e: FormEvent) => {
-        e.preventDefault();
-        router.get('/listings', { search }, { preserveState: true });
-    };
+    // const handleSearch = (e: FormEvent) => {
+    //     e.preventDefault();
+    //     router.get('/listings', { search }, { preserveState: true });
+    // };
 
     return (
         <>
@@ -46,7 +44,7 @@ const ListingsPage = ({ listings, filters }: ListingsPageProps) => {
 
                             <div className="flex items-center space-x-2">
                                 {/* Search Form */}
-                                <form onSubmit={handleSearch} className="flex items-center space-x-2">
+                                {/* <form onSubmit={handleSearch} className="flex items-center space-x-2">
                                     <Input
                                         type="search"
                                         placeholder="Search by name or author..."
@@ -57,7 +55,7 @@ const ListingsPage = ({ listings, filters }: ListingsPageProps) => {
                                     <Button type="submit" variant="secondary" size="sm">
                                         Search
                                     </Button>
-                                </form>
+                                </form> */}
 
                                 {/* Action Buttons */}
                                 <div className="flex items-center space-x-2">
@@ -79,9 +77,7 @@ const ListingsPage = ({ listings, filters }: ListingsPageProps) => {
                     </div>
 
                     {/* Table Section */}
-                    <div className="bg-card mx-4 rounded-lg border shadow-sm">
-                        <DataTable columns={Columns} data={listings} />
-                    </div>
+                    <DataTable columns={Columns} data={listings} />
                 </div>
             </AppLayout>
         </>

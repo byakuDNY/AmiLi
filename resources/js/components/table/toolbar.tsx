@@ -1,5 +1,5 @@
 import { Table } from '@tanstack/react-table';
-import { ArrowDown, ArrowRight, Circle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import ViewOptions from '@/components/table/view-options';
 import { Button } from '@/components/ui/button';
@@ -11,19 +11,6 @@ interface ToolbarProps<TData> {
     table: Table<TData>;
 }
 
-export const types = [
-    {
-        label: 'Manga',
-        value: 'manga',
-        icon: ArrowDown,
-    },
-    {
-        label: 'Anime',
-        value: 'anime',
-        icon: ArrowRight,
-    },
-];
-
 const Toolbar = <TData,>({ table }: ToolbarProps<TData>) => {
     const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -33,16 +20,26 @@ const Toolbar = <TData,>({ table }: ToolbarProps<TData>) => {
     const uniqueTags = Array.from(new Set(data.flatMap((listing) => listing.tags?.map((tag) => tag.name) || []))).map((tagName) => ({
         value: tagName.toLowerCase(),
         label: tagName,
-        icon: Circle,
+    }));
+
+    const types = Array.from(new Set(data.map((listing) => listing.type?.name))).map((typeName) => ({
+        value: typeName.toLowerCase(),
+        label: typeName,
     }));
 
     return (
         <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center space-x-2">
                 <Input
-                    placeholder="Search..."
+                    placeholder="Search name..."
                     value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
                     onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+                    className="h-8 w-[150px] lg:w-[250px]"
+                />
+                <Input
+                    placeholder="Search author..."
+                    value={(table.getColumn('author')?.getFilterValue() as string) ?? ''}
+                    onChange={(event) => table.getColumn('author')?.setFilterValue(event.target.value)}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
                 {table.getColumn('tag') && <DataTableFacetedFilter column={table.getColumn('tag')} title="Tags" options={uniqueTags} />}

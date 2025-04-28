@@ -68,7 +68,7 @@ const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
 
             {link && (
                 <Button size="sm" className="m-0 p-0" asChild>
-                    <a href={link}>
+                    <a href={link} target="_blank" rel="noreferrer nofollow noopener">
                         <LinkIcon className="size-4" />
                     </a>
                 </Button>

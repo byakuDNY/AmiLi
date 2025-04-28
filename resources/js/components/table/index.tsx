@@ -96,7 +96,7 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
     });
 
     return (
-        <div className="space-y-4">
+        <>
             <Toolbar table={table} />
             <div className="rounded-md border">
                 <Table>
@@ -139,7 +139,7 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
                 </Table>
             </div>
             <Pagination table={table} />
-        </div>
+        </>
     );
 };
 

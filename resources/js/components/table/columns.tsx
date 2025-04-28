@@ -25,6 +25,19 @@ const Columns: ColumnDef<Listing>[] = [
     {
         accessorKey: 'name',
         header: ({ column }) => <ColumnHeader column={column} title="Name" />,
+        cell: ({ row }) => {
+            const name = row.getValue('name') as string;
+            return (
+                <Tooltip>
+                    <TooltipTrigger className="flex w-full max-w-[200px]">
+                        <p className="text-muted-foreground truncate text-sm">{name}</p>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[300px]">
+                        <p className="text-sm">{name}</p>
+                    </TooltipContent>
+                </Tooltip>
+            );
+        },
         enableHiding: false,
     },
     {
@@ -48,6 +61,19 @@ const Columns: ColumnDef<Listing>[] = [
     {
         accessorKey: 'author',
         header: ({ column }) => <ColumnHeader column={column} title="Author" />,
+        cell: ({ row }) => {
+            const author = row.getValue('author') as string;
+            return (
+                <Tooltip>
+                    <TooltipTrigger className="flex w-full max-w-[200px]">
+                        <p className="text-muted-foreground truncate text-sm">{author}</p>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[300px]">
+                        <p className="text-sm">{author}</p>
+                    </TooltipContent>
+                </Tooltip>
+            );
+        },
     },
     {
         accessorKey: 'type',
@@ -64,6 +90,11 @@ const Columns: ColumnDef<Listing>[] = [
                     {type.name}
                 </span>
             );
+        },
+        filterFn: (row, id, filterValues: string[]) => {
+            if (!filterValues.length) return true;
+            const types = row.original.type as Type;
+            return filterValues.some((filterValue) => types?.name.toLowerCase() === filterValue.toLowerCase());
         },
         enableSorting: false,
     },
