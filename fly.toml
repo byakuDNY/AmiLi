@@ -1,9 +1,0 @@
-[env]
-APP_URL = "https://amili.fly.dev"
-DB_CONNECTION="pgsql"
-DB_DATABASE="postgres"
-DB_HOST="146.190.112.241"
-DB_PASSWORD="mP1hwhaYWCub9e2MwqJWJOWpx1cnR2lhIyzqoTMHv7Jp84XIk8eJf0Vvj8y0pKjq"
-DB_PORT="5433"
-DB_USERNAME="postgres"
-APP_NAME="AmiLi"
