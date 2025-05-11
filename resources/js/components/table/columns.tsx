@@ -138,7 +138,7 @@ const Columns: ColumnDef<Listing>[] = [
         filterFn: (row, id, filterValues: string[]) => {
             if (!filterValues.length) return true;
             const tags = row.original.tags as Tag[];
-            return filterValues.some((filterValue) => tags?.some((tag) => tag.name.toLowerCase() === filterValue.toLowerCase()));
+            return filterValues.every((filterValue) => tags?.some((tag) => tag.name.toLowerCase() === filterValue.toLowerCase()));
         },
         enableSorting: false,
     },

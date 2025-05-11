@@ -22,7 +22,6 @@ export default function AppearanceToggleTab({ className = '', ...props }: HTMLAt
 
     return (
         <div className={cn('space-y-1', className)} {...props}>
-            {/* First row - 3 buttons */}
             <div className="bg-muted grid grid-cols-3 gap-1 rounded-lg p-1">
                 {tabs.slice(0, 3).map(({ value, icon: Icon, label }) => (
                     <button
@@ -41,7 +40,6 @@ export default function AppearanceToggleTab({ className = '', ...props }: HTMLAt
                 ))}
             </div>
 
-            {/* Second row - 2 buttons */}
             <div className="bg-muted grid grid-cols-2 gap-1 rounded-lg p-1">
                 {tabs.slice(3).map(({ value, icon: Icon, label }) => (
                     <button

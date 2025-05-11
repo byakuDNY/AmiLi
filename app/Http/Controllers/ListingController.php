@@ -152,13 +152,13 @@ class ListingController extends Controller
             DB::transaction(function () use ($listingsData) {
                 foreach ($listingsData as $key => $listingData) {
                     $validator = Validator::make($listingData, [
-                        'name' => 'required|string|max:255',
+                        'name' => 'required|string',
                         'description' => 'nullable|string|max:1000',
                         'author' => 'nullable|string|max:255',
-                        'type' => 'required|string', // Changed from type_id to type
+                        'type' => 'required|string',
                         'imageUrl' => 'nullable|string|max:255',
                         'link' => 'nullable|string|max:255',
-                        'tags' => 'required|string', // Made tags required
+                        'tags' => 'required|string',
                     ]);
     
                     if ($validator->fails()) {
