@@ -143,6 +143,21 @@ const Columns: ColumnDef<Listing>[] = [
         enableSorting: false,
     },
     {
+        accessorKey: 'updated_at',
+        header: ({ column }) => <ColumnHeader column={column} title="Updated At" />,
+        cell: ({ row }) => {
+            const updatedAt = row.getValue('updated_at') as string;
+            const dateFormatted = updatedAt
+                ? new Intl.DateTimeFormat('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                  }).format(new Date(updatedAt))
+                : 'N/A';
+            return <span className="text-muted-foreground">{dateFormatted}</span>;
+        },
+    },
+    {
         accessorKey: 'actions',
         header: 'Actions',
         cell: ({ row }) => {

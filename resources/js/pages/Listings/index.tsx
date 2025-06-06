@@ -37,7 +37,7 @@ const ListingsPage = ({ listings }: ListingsPageProps) => {
                     {/* Header Section */}
                     <div className="mx-4 mt-2 mb-8">
                         <div className="flex items-center justify-between">
-                            <div onClick={() => console.log(listings)}>
+                            <div>
                                 <h1 className="text-3xl font-bold tracking-tight">Listings</h1>
                                 <p className="text-muted-foreground mt-2 text-sm">Manage and view all your available listings</p>
                             </div>
