@@ -56,9 +56,6 @@ export default function TypesPage({ types }: Props) {
         if (e.key === 'Enter') {
             e.preventDefault();
             handleAddType(typeInput);
-        } else if (e.key === ',' || e.key === ' ') {
-            e.preventDefault();
-            handleAddType(typeInput);
         } else if (e.key === 'Backspace' && !typeInput) {
             setPendingTypes(pendingTypes.slice(0, -1));
         }
@@ -109,7 +106,7 @@ export default function TypesPage({ types }: Props) {
                     <div className="mx-4 mt-2 mb-8 flex justify-between">
                         <div>
                             <h1 className="text-3xl font-bold tracking-tight">Manage your types</h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Type and press Enter, Space or Comma to add multiple types.</p>
+                            <p className="text-muted-foreground mt-2 text-sm">Type and press Enter to add multiple types.</p>
                             <p className="text-muted-foreground mt-2 text-sm">Press Backspace to remove a type.</p>
                         </div>
 

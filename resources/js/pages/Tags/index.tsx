@@ -55,9 +55,6 @@ export default function TagsPage({ tags }: Props) {
         if (e.key === 'Enter') {
             e.preventDefault();
             handleAddTag(tagInput);
-        } else if (e.key === ',' || e.key === ' ') {
-            e.preventDefault();
-            handleAddTag(tagInput);
         } else if (e.key === 'Backspace' && !tagInput) {
             setPendingTags(pendingTags.slice(0, -1));
         }
@@ -108,7 +105,7 @@ export default function TagsPage({ tags }: Props) {
                     <div className="mx-4 mt-2 mb-8 flex justify-between">
                         <div>
                             <h1 className="text-3xl font-bold tracking-tight">Manage your tags</h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Type and press Enter, Space or Comma to add multiple tags.</p>
+                            <p className="text-muted-foreground mt-2 text-sm">Type and press Enter to add multiple tags.</p>
                             <p className="text-muted-foreground mt-2 text-sm">Press Backspace to remove a tag.</p>
                         </div>
 
