@@ -57,8 +57,8 @@ class ListingController extends Controller
             'description' => 'nullable|string|max:1000',
             'author' => 'nullable|string|max:255',
             'type_id' => 'required|exists:types,id',
-            'imageUrl' => 'nullable|string|max:255',
-            'link' => 'nullable|string|max:255',
+            'imageUrl' => 'nullable|url|max:255',
+            'link' => 'nullable|url|max:255',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id'
         ]);
@@ -88,7 +88,11 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        // $this->authorize('update', $listing);
+        // Ensure user can only edit their own listings
+        if ($listing->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         return Inertia::render('Listings/edit', [
             'listing' => $listing->load(['tags', 'type']),
             'availableTags' => Tag::orderBy('name')->get(),
@@ -101,13 +105,18 @@ class ListingController extends Controller
      */
     public function update(Request $request, Listing $listing)
     {
+        // Ensure user can only update their own listings
+        if ($listing->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'author' => 'nullable|string|max:255',
             'type_id' => 'required|exists:types,id',
-            'imageUrl' => 'nullable|string|max:255',
-            'link' => 'nullable|string|max:255',
+            'imageUrl' => 'nullable|url|max:255',
+            'link' => 'nullable|url|max:255',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id'
         ]);
@@ -127,6 +136,11 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing)
     {
+        // Ensure user can only delete their own listings
+        if ($listing->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $listing->delete();
         return redirect()->route('listings.index');
     }
@@ -156,8 +170,8 @@ class ListingController extends Controller
                         'description' => 'nullable|string|max:1000',
                         'author' => 'nullable|string|max:255',
                         'type' => 'required|string',
-                        'imageUrl' => 'nullable|string|max:255',
-                        'link' => 'nullable|string|max:255',
+                        'imageUrl' => 'nullable|url|max:255',
+                        'link' => 'nullable|url|max:255',
                         'tags' => 'required|string',
                     ]);
     
@@ -206,5 +220,93 @@ class ListingController extends Controller
                              ->withErrors(['listingsData' => $e->getMessage()])
                              ->withInput();
         }
+    }
+
+    public function exportListings()
+    {
+        $listings = Listing::with(['tags', 'type'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get()
+            ->map(function ($listing) {
+                return [
+                    'id' => $listing->id,
+                    'name' => $listing->name,
+                    'description' => $listing->description,
+                    'author' => $listing->author,
+                    'imageUrl' => $listing->imageUrl,
+                    'link' => $listing->link,
+                    'type' => $listing->type->name,
+                    'tags' => $listing->tags->pluck('name')->implode(', '),
+                    'created_at' => $listing->created_at->toISOString(),
+                    'updated_at' => $listing->updated_at->toISOString(),
+                ];
+            });
+
+        return Inertia::render('Listings/export-listings', [
+            'listings' => $listings->toArray()
+        ]);
+    }
+
+    public function downloadListings(Request $request)
+    {
+        $request->validate([
+            'fields' => 'nullable|array',
+            'fields.*' => 'string|in:id,name,description,author,imageUrl,link,type,tags,created_at,updated_at'
+        ]);
+
+        $selectedFields = $request->input('fields', [
+            'id', 'name', 'description', 'author', 'imageUrl', 'link', 'type', 'tags'
+        ]);
+
+        $listings = Listing::with(['tags', 'type'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get()
+            ->map(function ($listing) use ($selectedFields) {
+                $data = [];
+                
+                if (in_array('id', $selectedFields)) {
+                    $data['id'] = $listing->id;
+                }
+                if (in_array('name', $selectedFields)) {
+                    $data['name'] = $listing->name;
+                }
+                if (in_array('description', $selectedFields)) {
+                    $data['description'] = $listing->description;
+                }
+                if (in_array('author', $selectedFields)) {
+                    $data['author'] = $listing->author;
+                }
+                if (in_array('imageUrl', $selectedFields)) {
+                    $data['imageUrl'] = $listing->imageUrl;
+                }
+                if (in_array('link', $selectedFields)) {
+                    $data['link'] = $listing->link;
+                }
+                if (in_array('type', $selectedFields)) {
+                    $data['type'] = $listing->type->name;
+                }
+                if (in_array('tags', $selectedFields)) {
+                    $data['tags'] = $listing->tags->pluck('name')->implode(', ');
+                }
+                if (in_array('created_at', $selectedFields)) {
+                    $data['created_at'] = $listing->created_at->toISOString();
+                }
+                if (in_array('updated_at', $selectedFields)) {
+                    $data['updated_at'] = $listing->updated_at->toISOString();
+                }
+
+                return $data;
+            });
+
+        $filename = 'listings-export-' . now()->format('Y-m-d-H-i-s') . '.json';
+        $jsonData = json_encode($listings->toArray(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        
+        return response($jsonData, 200, [
+            'Content-Type' => 'application/json',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Length' => strlen($jsonData),
+        ]);
     }
 }

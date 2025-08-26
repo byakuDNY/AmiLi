@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type Listing } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 
 interface ListingsPageProps {
     listings: Listing[];
@@ -59,6 +59,12 @@ const ListingsPage = ({ listings }: ListingsPageProps) => {
 
                                 {/* Action Buttons */}
                                 <div className="flex items-center space-x-2">
+                                    <Button asChild variant="outline" size="sm">
+                                        <Link href="/listings/export-listings" className="inline-flex items-center">
+                                            <Download className="mr-2 h-4 w-4" />
+                                            Export Listings
+                                        </Link>
+                                    </Button>
                                     <Button asChild size="sm">
                                         <Link href="/listings/create" className="inline-flex items-center">
                                             <Plus className="mr-2 h-4 w-4" />

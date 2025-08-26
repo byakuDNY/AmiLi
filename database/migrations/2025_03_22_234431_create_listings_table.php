@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Type::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('description')->nullable();

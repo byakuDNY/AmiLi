@@ -20,6 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/listings/bulk-create', [ListingController::class, 'bulkCreate']);
     Route::post('/listings/bulk', [ListingController::class, 'storeBulk']);
 
+    // Export Routes
+    Route::get('/listings/export-listings', [ListingController::class, 'exportListings']);
+    Route::post('/listings/download', [ListingController::class, 'downloadListings']);
+
     // Listings Resource
     Route::resource('listings', ListingController::class);
     
